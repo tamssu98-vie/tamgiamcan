@@ -2,4 +2,5 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
-createRoot(document.getElementById('root')!).render(<App />);
+import Bg3D from './Bg3D';
+createRoot(document.getElementById('root')!).render(<><Bg3D /><App /></>);

@@ -1156,7 +1156,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 pb-16">
+    <div className="min-h-screen bg-slate-50/30 text-slate-800 pb-16">
       <div className="bg-amber-50 border-b border-amber-200 text-amber-900 text-xs sm:text-sm px-4 py-2 text-center">
         Công cụ chỉ mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia dinh dưỡng. Hãy hỏi ý kiến bác sĩ trước khi thay đổi chế độ ăn.
       </div>
@@ -1223,7 +1223,7 @@ export default function App() {
         ========================================== */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* CỘT TRÁI (5/12): THÔNG SỐ CƠ THỂ & THÂM HỤT CALO AN TOÀN */}
-          <div className="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+          <div className="lg:col-span-5 t3d bg-white rounded-2xl border border-slate-200 p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
@@ -1381,7 +1381,7 @@ export default function App() {
           </div>
 
           {/* CỘT PHẢI (7/12): KẾT QUẢ TỨC THÌ, 2 CỘT MỐC VÀNG & QUY ĐỔI BÀN TAY */}
-          <div className="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between space-y-4">
+          <div className="lg:col-span-7 t3d bg-white rounded-2xl border border-slate-200 p-5 flex flex-col justify-between space-y-4">
             {/* 4 Thẻ chỉ số cốt lõi */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className={`p-3 rounded-xl border ${metrics.bmiColor}`}>
@@ -1523,7 +1523,7 @@ export default function App() {
         <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => setMainTab('30days')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
+            className={`btn3d flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
               mainTab === '30days'
                 ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
@@ -1538,7 +1538,7 @@ export default function App() {
 
           <button
             onClick={() => setMainTab('office_dining')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
+            className={`btn3d flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
               mainTab === 'office_dining'
                 ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
@@ -1553,7 +1553,7 @@ export default function App() {
 
           <button
             onClick={() => setMainTab('builder')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
+            className={`btn3d flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
               mainTab === 'builder'
                 ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
@@ -1565,7 +1565,7 @@ export default function App() {
 
           <button
             onClick={() => setMainTab('tracker')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
+            className={`btn3d flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
               mainTab === 'tracker'
                 ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
@@ -1602,7 +1602,7 @@ export default function App() {
         {mainTab === 'office_dining' && (
           <section className="space-y-8">
             {/* PHÂN KHU A: MÓN ĂN VẶT VĂN PHÒNG CHUẨN GAN NHIỄM MỠ */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-6">
+            <div className="t3d bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-6">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
                 <div className="flex items-center gap-2.5">
                   <div className="p-2.5 rounded-xl bg-emerald-100 text-emerald-700">
@@ -1630,7 +1630,7 @@ export default function App() {
                     <button
                       key={f.id}
                       onClick={() => setSnackFilter(f.id)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                      className={`btn3d px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                         snackFilter === f.id
                           ? f.id === 'red_list'
                             ? 'bg-rose-600 text-white'
@@ -1653,7 +1653,7 @@ export default function App() {
                   return (
                     <div
                       key={snack.id}
-                      className={`p-4 rounded-2xl border flex flex-col justify-between ${
+                      className={`t3d p-4 rounded-2xl border flex flex-col justify-between ${
                         isRed
                           ? 'bg-rose-50/40 border-rose-200'
                           : 'bg-slate-50/60 border-slate-200 hover:border-emerald-300'
@@ -1748,7 +1748,7 @@ export default function App() {
             </div>
 
             {/* PHÂN KHU B: THỰC ĐƠN & CẨM NANG KHI ĐI ĂN HÀNG QUÁN BÊN NGOÀI */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-6">
+            <div className="t3d bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-6">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
                 <div className="flex items-center gap-2.5">
                   <div className="p-2.5 rounded-xl bg-sky-100 text-sky-700">
@@ -1776,7 +1776,7 @@ export default function App() {
                     <button
                       key={c.id}
                       onClick={() => setDiningCategory(c.id)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                      className={`btn3d px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                         diningCategory === c.id
                           ? 'bg-sky-600 text-white'
                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -1971,7 +1971,7 @@ export default function App() {
         ========================================== */}
         {mainTab === 'builder' && (
           <section className="space-y-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-6">
+            <div className="t3d bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200">
                 <div>
                   <h2 className="text-base sm:text-lg font-extrabold text-slate-800">
@@ -1992,7 +1992,7 @@ export default function App() {
                   { label: 'Chất béo (Fat)', current: customMenuData.totalFat, target: metrics.fatGrams, unit: 'g', color: 'bg-amber-500' },
                   { label: 'Chất xơ (Fiber)', current: customMenuData.totalFiber, target: metrics.fiberTarget, unit: 'g', color: 'bg-teal-500' }
                 ].map((bar, i) => (
-                  <div key={i} className="bg-white p-3 rounded-xl border border-slate-200">
+                  <div key={i} className="t3d bg-white p-3 rounded-xl border border-slate-200">
                     <div className="flex justify-between text-xs font-bold mb-1">
                       <span>{bar.label}</span>
                       <span className="text-slate-800">
@@ -2140,7 +2140,7 @@ export default function App() {
             </div>
 
             {/* Cẩm nang Đèn Giao Thông */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+            <div className="t3d bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
                 <h3 className="text-base font-extrabold text-slate-800">
                   Cẩm Nang Đèn Giao Thông Thực Phẩm Cho Người Gan Nhiễm Mỡ
