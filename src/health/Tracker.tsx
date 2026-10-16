@@ -3,7 +3,7 @@ import { todayStr, HealthStore } from './store';
 
 const STEPS_TARGET = 8000;
 const num = (v: any) => (v === '' || v === undefined || v === null || isNaN(Number(v)) ? undefined : Number(v));
-const card = 'bg-white rounded-2xl shadow-sm border border-slate-200 p-5 space-y-4';
+const card = 'bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-emerald-950/5 border border-white/80 p-5 sm:p-6 space-y-4';
 const input = 'w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400';
 const btn = 'px-4 py-2 rounded-lg text-sm font-bold bg-emerald-600 text-white hover:bg-emerald-700';
 const btn2 = 'px-3 py-2 rounded-lg text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';

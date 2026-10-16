@@ -1,1 +1,111 @@
 @import "tailwindcss";
+
+@layer utilities {
+  /* 3D Glassmorphism & Depth Layers */
+  .glass-card-3d {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 
+      0 10px 30px -5px rgba(0, 0, 0, 0.05),
+      0 20px 40px -15px rgba(16, 185, 129, 0.08),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .glass-card-dark-3d {
+    background: rgba(15, 23, 42, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 15px 35px -5px rgba(0, 0, 0, 0.4),
+      0 0 25px -5px rgba(16, 185, 129, 0.2),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* 3D Dining Table Surface */
+  .dining-table-surface {
+    background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.85) 60%, rgba(209, 250, 229, 0.75) 100%);
+    box-shadow: 
+      0 25px 60px -15px rgba(4, 120, 87, 0.12),
+      inset 0 2px 4px rgba(255, 255, 255, 0.9),
+      inset 0 -10px 30px rgba(16, 185, 129, 0.06);
+    position: relative;
+  }
+
+  /* 3D Ceramic Plate */
+  .plate-3d {
+    border-radius: 2.25rem;
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+    box-shadow: 
+      0 15px 35px -8px rgba(15, 23, 42, 0.12),
+      0 30px 60px -20px rgba(16, 185, 129, 0.2),
+      inset 0 4px 6px rgba(255, 255, 255, 0.9),
+      inset 0 -4px 8px rgba(148, 163, 184, 0.2);
+    border: 3px solid rgba(255, 255, 255, 0.95);
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .plate-3d:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+      0 25px 50px -10px rgba(15, 23, 42, 0.18),
+      0 35px 70px -15px rgba(16, 185, 129, 0.3),
+      inset 0 4px 8px rgba(255, 255, 255, 1),
+      inset 0 -6px 12px rgba(148, 163, 184, 0.25);
+    border-color: rgba(52, 211, 153, 0.8);
+  }
+
+  /* Inner Recess of Plate */
+  .plate-inner-well {
+    box-shadow: 
+      inset 0 4px 12px rgba(15, 23, 42, 0.06),
+      inset 0 -2px 6px rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+  }
+
+  /* 3D Floating Button / Pill */
+  .btn-3d-emerald {
+    background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+    box-shadow: 
+      0 4px 0 #047857,
+      0 8px 16px rgba(5, 150, 105, 0.35);
+    transition: all 0.15s ease-in-out;
+  }
+  .btn-3d-emerald:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 6px 0 #047857,
+      0 12px 20px rgba(5, 150, 105, 0.45);
+  }
+  .btn-3d-emerald:active {
+    transform: translateY(2px);
+    box-shadow: 
+      0 2px 0 #047857,
+      0 4px 8px rgba(5, 150, 105, 0.3);
+  }
+
+  /* 3D Tile depth */
+  .tile-3d {
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .tile-3d:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 
+      0 18px 30px -10px rgba(16, 185, 129, 0.18),
+      0 6px 15px -3px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Shimmer animation for badges */
+  @keyframes shimmer-3d {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .shimmer-3d-glow {
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+    background-size: 200% 100%;
+    animation: shimmer-3d 3s infinite;
+  }
+}

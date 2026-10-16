@@ -776,6 +776,9 @@ import { DISHES } from './data/dishes';
 import { EXTRA_SNACKS } from './data/snacks';
 import { EXTRA_DINING } from './data/dining';
 import { useHealthStore } from './health/store';
+import Background3D from './components/Background3D';
+import Card3D from './components/Card3D';
+import DiningTable from './components/DiningTable';
 
 // Lưu tiến độ vào localStorage (có thể bị chặn trong iframe -> bỏ qua lỗi)
 const usePersisted = <T,>(key: string, init: T) => {
@@ -812,9 +815,9 @@ export default function App() {
   const [proteinRatio, setProteinRatio] = useState(30);
   const [fatRatio, setFatRatio] = useState(30);
 
-  // State Điều hướng 3 Tab Trọng Tâm
+  // State Điều hướng: 'table' (Bàn Ăn 3D) hoặc 4 đĩa ăn chi tiết
   const health = useHealthStore();
-  const [mainTab, setMainTab] = useState('30days'); // '30days' | 'office_dining' | 'builder' | 'tracker'
+  const [mainTab, setMainTab] = useState<'table' | '30days' | 'office_dining' | 'builder' | 'tracker'>('table');
 
 
   // State cho TAB 2: Ăn vặt văn phòng & Ăn hàng quán
@@ -1156,14 +1159,17 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 pb-16">
-      <div className="bg-amber-50 border-b border-amber-200 text-amber-900 text-xs sm:text-sm px-4 py-2 text-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100/90 via-emerald-50/40 to-teal-50/60 text-slate-800 pb-16 relative overflow-x-hidden selection:bg-emerald-500 selection:text-white">
+      {/* 3D WebGL Canvas Particles & Geometry */}
+      <Background3D />
+
+      <div className="bg-amber-50/90 backdrop-blur-md border-b border-amber-200 text-amber-900 text-xs sm:text-sm px-4 py-2 text-center relative z-20">
         Công cụ chỉ mang tính tham khảo, không thay thế tư vấn của bác sĩ hoặc chuyên gia dinh dưỡng. Hãy hỏi ý kiến bác sĩ trước khi thay đổi chế độ ăn.
       </div>
       {/* ==========================================
           STICKY HEADER & LIVE METRICS BAR
       ========================================== */}
-      <header className="bg-gradient-to-r from-emerald-800 via-teal-800 to-emerald-900 text-white shadow-lg sticky top-0 z-30">
+      <header className="bg-gradient-to-r from-emerald-900/95 via-teal-900/95 to-emerald-950/95 backdrop-blur-xl text-white shadow-xl shadow-emerald-950/15 border-b border-white/10 sticky top-0 z-30">
         <div className="w-full px-4 py-3 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -1213,6 +1219,17 @@ export default function App() {
               <Droplets className="w-3.5 h-3.5" />
               <span>{metrics.waterLiters}L nước/ngày</span>
             </div>
+            <span className="text-white/20">|</span>
+            <button
+              onClick={() => setMainTab('table')}
+              className={`text-xs px-3 py-1.5 rounded-xl font-extrabold flex items-center gap-1.5 transition-all shadow-sm ${
+                mainTab === 'table'
+                  ? 'bg-amber-400 text-slate-950 shadow-amber-400/30'
+                  : 'bg-white/15 hover:bg-white/25 text-white'
+              }`}
+            >
+              <span>🍽 Bàn Ăn 3D</span>
+            </button>
           </div>
         </div>
       </header>
@@ -1223,7 +1240,7 @@ export default function App() {
         ========================================== */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* CỘT TRÁI (5/12): THÔNG SỐ CƠ THỂ & THÂM HỤT CALO AN TOÀN */}
-          <div className="lg:col-span-5 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+          <div className="lg:col-span-5 bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-emerald-950/5 border border-white/80 p-5 sm:p-6 flex flex-col justify-between transition-all">
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
@@ -1381,34 +1398,34 @@ export default function App() {
           </div>
 
           {/* CỘT PHẢI (7/12): KẾT QUẢ TỨC THÌ, 2 CỘT MỐC VÀNG & QUY ĐỔI BÀN TAY */}
-          <div className="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between space-y-4">
-            {/* 4 Thẻ chỉ số cốt lõi */}
+          <div className="lg:col-span-7 bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-emerald-950/5 border border-white/80 p-5 sm:p-6 flex flex-col justify-between space-y-4 transition-all">
+            {/* 4 Thẻ chỉ số cốt lõi với hiệu ứng 3D Parallax Tilt */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className={`p-3 rounded-xl border ${metrics.bmiColor}`}>
+              <Card3D maxTilt={9} className={`p-3.5 rounded-2xl border ${metrics.bmiColor} bg-white/70 backdrop-blur-md`}>
                 <div className="text-[11px] font-semibold uppercase opacity-80">BMI Châu Á</div>
                 <div className="text-2xl font-extrabold mt-0.5">{metrics.bmi}</div>
                 <div className="text-[10px] font-bold mt-0.5 truncate">{metrics.bmiCategory}</div>
-              </div>
+              </Card3D>
 
-              <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
+              <Card3D maxTilt={9} className="p-3.5 rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-md">
                 <div className="text-[11px] font-semibold text-slate-500 uppercase">BMR Nền</div>
                 <div className="text-2xl font-extrabold text-slate-800 mt-0.5">
                   {metrics.bmr}
                 </div>
                 <div className="text-[10px] text-slate-500 mt-0.5">kcal nghỉ ngơi</div>
-              </div>
+              </Card3D>
 
-              <div className="p-3 rounded-xl border border-slate-200 bg-slate-50">
+              <Card3D maxTilt={9} className="p-3.5 rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-md">
                 <div className="text-[11px] font-semibold text-slate-500 uppercase">TDEE Duy Trì</div>
                 <div className="text-2xl font-extrabold text-slate-800 mt-0.5">
                   {metrics.tdee}
                 </div>
                 <div className="text-[10px] text-slate-500 mt-0.5">kcal giữ cân</div>
-              </div>
+              </Card3D>
 
-              <div className="p-3 rounded-xl border border-emerald-300 bg-gradient-to-br from-emerald-50 to-teal-50">
+              <Card3D maxTilt={9} className="p-3.5 rounded-2xl border border-emerald-300/90 bg-gradient-to-br from-emerald-50/90 to-teal-50/90 backdrop-blur-md shadow-emerald-500/15">
                 <div className="text-[11px] font-bold text-emerald-800 uppercase flex items-center gap-1">
-                  <Flame className="w-3.5 h-3.5 text-emerald-600" /> Calo Mục Tiêu
+                  <Flame className="w-3.5 h-3.5 text-emerald-600 animate-pulse" /> Calo Mục Tiêu
                 </div>
                 <div className="text-2xl font-extrabold text-emerald-700 mt-0.5">
                   {metrics.targetCalories}
@@ -1416,12 +1433,12 @@ export default function App() {
                 <div className="text-[10px] font-semibold text-emerald-700 mt-0.5">
                   kcal/ngày (-{metrics.actualDeficit})
                 </div>
-              </div>
+              </Card3D>
             </div>
 
-            {/* Phân bổ Macro & Nước uống */}
+            {/* Phân bổ Macro & Nước uống với 3D hover depth */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              <div className="p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200">
+              <Card3D maxTilt={6} className="p-2.5 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 backdrop-blur-md">
                 <div className="text-[10px] font-bold text-emerald-800 uppercase">
                   Tinh bột chậm ({carbRatio}%)
                 </div>
@@ -1429,9 +1446,9 @@ export default function App() {
                   {metrics.carbGrams}g <span className="text-xs font-medium">({metrics.carbKcal} kcal)</span>
                 </div>
                 <div className="text-[10px] text-slate-600">~{portionEquivalents.brownRiceBowls} lưng bát cơm lứt</div>
-              </div>
+              </Card3D>
 
-              <div className="p-2.5 rounded-xl bg-sky-50/70 border border-sky-200">
+              <Card3D maxTilt={6} className="p-2.5 rounded-2xl bg-sky-50/80 border border-sky-200/80 backdrop-blur-md">
                 <div className="text-[10px] font-bold text-sky-800 uppercase">
                   Đạm nạc ({proteinRatio}%)
                 </div>
@@ -1439,19 +1456,19 @@ export default function App() {
                   {metrics.proteinGrams}g <span className="text-xs font-medium">({metrics.proteinKcal} kcal)</span>
                 </div>
                 <div className="text-[10px] text-slate-600">Đẩy mỡ VLDL khỏi gan</div>
-              </div>
+              </Card3D>
 
-              <div className="p-2.5 rounded-xl bg-amber-50/70 border border-amber-200">
+              <Card3D maxTilt={6} className="p-2.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 backdrop-blur-md">
                 <div className="text-[10px] font-bold text-amber-800 uppercase">
                   Chất béo tốt ({fatRatio}%)
                 </div>
                 <div className="text-lg font-extrabold text-amber-700">
                   {metrics.fatGrams}g <span className="text-xs font-medium">({metrics.fatKcal} kcal)</span>
                 </div>
-                <div className="text-[10px] text-slate-600">Omega-3 cá, dầu ô liu, hạt</div>
-              </div>
+                <div className="text-[10px] text-slate-600">Omega-3 cá, ô liu, hạt</div>
+              </Card3D>
 
-              <div className="p-2.5 rounded-xl bg-teal-50/70 border border-teal-200">
+              <Card3D maxTilt={6} className="p-2.5 rounded-2xl bg-teal-50/80 border border-teal-200/80 backdrop-blur-md">
                 <div className="text-[10px] font-bold text-teal-800 uppercase">
                   Nước & Chất xơ
                 </div>
@@ -1459,13 +1476,13 @@ export default function App() {
                   {metrics.waterLiters} Lít <span className="text-xs font-medium">({metrics.waterMl}ml)</span>
                 </div>
                 <div className="text-[10px] text-slate-600">Xơ: 30-35g (400-500g rau)</div>
-              </div>
+              </Card3D>
             </div>
 
             {/* 2 Cột mốc vàng phục hồi gan */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white/60 backdrop-blur-md p-3.5 rounded-2xl border border-slate-200/80 shadow-xs">
               <div className="flex items-start gap-2.5">
-                <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-1 rounded-lg shrink-0">
+                <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg shrink-0 shadow-sm shadow-emerald-600/30">
                   MỐC 1 (-5%)
                 </span>
                 <div className="text-xs">
@@ -1479,7 +1496,7 @@ export default function App() {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <span className="bg-sky-600 text-white text-[10px] font-extrabold px-2 py-1 rounded-lg shrink-0">
+                <span className="bg-sky-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-lg shrink-0 shadow-sm shadow-sky-600/30">
                   MỐC 2 (-10%)
                 </span>
                 <div className="text-xs">
@@ -1494,22 +1511,22 @@ export default function App() {
             </div>
 
             {/* Quy đổi khẩu phần bằng bàn tay trực quan */}
-            <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-3.5 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div className="bg-gradient-to-r from-slate-900/95 via-emerald-950/90 to-slate-900/95 backdrop-blur-xl border border-white/10 text-white p-3.5 rounded-2xl shadow-lg flex flex-wrap items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-1.5 font-bold text-emerald-300">
                 <Hand className="w-4 h-4" />
                 <span>Quy đổi Bàn Tay 1 Ngày:</span>
               </div>
               <div className="flex flex-wrap gap-2">
-                <span className="bg-white/10 px-2.5 py-1 rounded-lg">
+                <span className="bg-white/10 px-2.5 py-1 rounded-lg border border-white/10">
                   👊 <strong>4 nắm đấm</strong> Rau xanh
                 </span>
-                <span className="bg-white/10 px-2.5 py-1 rounded-lg">
+                <span className="bg-white/10 px-2.5 py-1 rounded-lg border border-white/10">
                   ✋ <strong>{portionEquivalents.proteinPalms} lòng bàn tay</strong> Đạm nạc
                 </span>
-                <span className="bg-white/10 px-2.5 py-1 rounded-lg">
+                <span className="bg-white/10 px-2.5 py-1 rounded-lg border border-white/10">
                   ✊ <strong>{portionEquivalents.carbFists} nắm tay</strong> Tinh bột chậm
                 </span>
-                <span className="bg-white/10 px-2.5 py-1 rounded-lg">
+                <span className="bg-white/10 px-2.5 py-1 rounded-lg border border-white/10">
                   👍 <strong>2 ngón cái</strong> Chất béo tốt
                 </span>
               </div>
@@ -1518,63 +1535,68 @@ export default function App() {
         </section>
 
         {/* ==========================================
-            THANH ĐIỀU HƯỚNG 3 PHÂN HỆ TRỌNG TÂM (MAIN NAVIGATION TABS)
+            BÀN ĂN 3D HOẶC CHI TIẾT ĐĨA ĂN ĐANG CHỌN
         ========================================== */}
-        <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row gap-2">
-          <button
-            onClick={() => setMainTab('30days')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
-              mainTab === '30days'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <Calendar className="w-4 h-4" />
-            <span>1. Thư Viện {DISHES.length} Món Dễ Nấu & Healthy</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black">
-              MỚI
-            </span>
-          </button>
+        {mainTab === 'table' ? (
+          <DiningTable
+            onSelectPlate={(plateId) => setMainTab(plateId)}
+            dishCount={DISHES.length}
+            targetCalories={metrics.targetCalories}
+          />
+        ) : (
+          <div className="space-y-6">
+            {/* THANH ĐIỀU HƯỚNG ĐĨA ĂN 3D & NÚT QUAY LẠI BÀN ĂN */}
+            <div className="bg-white/90 backdrop-blur-xl p-3 sm:p-4 rounded-3xl shadow-xl shadow-emerald-950/5 border border-white/80 flex flex-col md:flex-row items-center justify-between gap-3 sticky top-16 z-20">
+              <button
+                onClick={() => setMainTab('table')}
+                className="w-full md:w-auto px-4 py-2.5 rounded-2xl bg-gradient-to-r from-slate-900 to-emerald-950 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-slate-900/20 hover:scale-[1.02] transition-all"
+              >
+                <span>← Quay Lại Bàn Ăn 3D</span>
+              </button>
 
-          <button
-            onClick={() => setMainTab('office_dining')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
-              mainTab === 'office_dining'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <Briefcase className="w-4 h-4" />
-            <span>2. Ăn Vặt Văn Phòng & Bí Kíp Ăn Hàng Quán</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black">
-              HOT
-            </span>
-          </button>
-
-          <button
-            onClick={() => setMainTab('builder')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
-              mainTab === 'builder'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <Utensils className="w-4 h-4" />
-            <span>3. Tự Thiết Kế Bữa Ăn & Cẩm Nang Đèn Giao Thông</span>
-          </button>
-
-          <button
-            onClick={() => setMainTab('tracker')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-2 ${
-              mainTab === 'tracker'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-            }`}
-          >
-            <Activity className="w-4 h-4" />
-            <span>4. Theo Dõi Của Tôi</span>
-          </button>
-        </div>
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full md:w-auto justify-center">
+                <button
+                  onClick={() => setMainTab('30days')}
+                  className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
+                    mainTab === '30days'
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-600/30 scale-[1.02]'
+                      : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/90'
+                  }`}
+                >
+                  <span>🍲 1. Đĩa Thư Viện {DISHES.length} Món</span>
+                </button>
+                <button
+                  onClick={() => setMainTab('office_dining')}
+                  className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
+                    mainTab === 'office_dining'
+                      ? 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg shadow-amber-600/30 scale-[1.02]'
+                      : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/90'
+                  }`}
+                >
+                  <span>🍱 2. Khay Ăn Vặt & Quán</span>
+                </button>
+                <button
+                  onClick={() => setMainTab('builder')}
+                  className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
+                    mainTab === 'builder'
+                      ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg shadow-teal-600/30 scale-[1.02]'
+                      : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/90'
+                  }`}
+                >
+                  <span>🥗 3. Đĩa Tự Lắp Ghép</span>
+                </button>
+                <button
+                  onClick={() => setMainTab('tracker')}
+                  className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
+                    mainTab === 'tracker'
+                      ? 'bg-gradient-to-r from-indigo-600 to-sky-600 text-white shadow-lg shadow-indigo-600/30 scale-[1.02]'
+                      : 'bg-slate-100/90 text-slate-600 hover:bg-slate-200/90'
+                  }`}
+                >
+                  <span>📋 4. Khay Nhật Ký</span>
+                </button>
+              </div>
+            </div>
 
         {/* ==========================================
             TAB 1: THỰC ĐƠN 30 NGÀY THUẦN VIỆT - DỄ CHẾ BIẾN & HEALTHY
@@ -1602,7 +1624,7 @@ export default function App() {
         {mainTab === 'office_dining' && (
           <section className="space-y-8">
             {/* PHÂN KHU A: MÓN ĂN VẶT VĂN PHÒNG CHUẨN GAN NHIỄM MỠ */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-6">
+            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-emerald-950/5 border border-white/80 p-5 sm:p-6 space-y-6">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
                 <div className="flex items-center gap-2.5">
                   <div className="p-2.5 rounded-xl bg-emerald-100 text-emerald-700">
@@ -1633,8 +1655,8 @@ export default function App() {
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                         snackFilter === f.id
                           ? f.id === 'red_list'
-                            ? 'bg-rose-600 text-white'
-                            : 'bg-emerald-600 text-white'
+                            ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
+                            : 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                       }`}
                     >
@@ -1644,19 +1666,20 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Lưới các món ăn vặt */}
+              {/* Lưới các món ăn vặt với Card3D */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {OFFICE_SNACKS.filter((s) =>
                   snackFilter === 'all' ? true : s.category === snackFilter
                 ).map((snack) => {
                   const isRed = snack.category === 'red_list';
                   return (
-                    <div
+                    <Card3D
                       key={snack.id}
-                      className={`p-4 rounded-2xl border flex flex-col justify-between ${
+                      maxTilt={7}
+                      className={`p-4 rounded-2xl border flex flex-col justify-between backdrop-blur-md transition-all ${
                         isRed
-                          ? 'bg-rose-50/40 border-rose-200'
-                          : 'bg-slate-50/60 border-slate-200 hover:border-emerald-300'
+                          ? 'bg-rose-50/70 border-rose-200/90 shadow-rose-500/5'
+                          : 'bg-white/80 border-slate-200/90 hover:border-emerald-300 shadow-emerald-500/5'
                       }`}
                     >
                       <div>
@@ -1683,7 +1706,7 @@ export default function App() {
                           {snack.name}
                         </h3>
 
-                        <div className="mt-2 space-y-1 text-xs text-slate-600 bg-white p-2.5 rounded-xl border border-slate-200/80">
+                        <div className="mt-2 space-y-1 text-xs text-slate-600 bg-white/80 p-2.5 rounded-xl border border-slate-200/80">
                           <div className="flex justify-between">
                             <span>Khẩu phần 1 lần:</span>
                             <strong className="text-slate-800">{snack.portion}</strong>
@@ -1706,7 +1729,7 @@ export default function App() {
                           {snack.liverNote}
                         </p>
                       </div>
-                    </div>
+                    </Card3D>
                   );
                 })}
               </div>
@@ -1748,7 +1771,7 @@ export default function App() {
             </div>
 
             {/* PHÂN KHU B: THỰC ĐƠN & CẨM NANG KHI ĐI ĂN HÀNG QUÁN BÊN NGOÀI */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-6">
+            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-emerald-950/5 border border-white/80 p-5 sm:p-6 space-y-6">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
                 <div className="flex items-center gap-2.5">
                   <div className="p-2.5 rounded-xl bg-sky-100 text-sky-700">
@@ -1971,7 +1994,7 @@ export default function App() {
         ========================================== */}
         {mainTab === 'builder' && (
           <section className="space-y-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-6">
+            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-emerald-950/5 border border-white/80 p-5 sm:p-6 space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200">
                 <div>
                   <h2 className="text-base sm:text-lg font-extrabold text-slate-800">
@@ -2140,7 +2163,7 @@ export default function App() {
             </div>
 
             {/* Cẩm nang Đèn Giao Thông */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+            <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl shadow-emerald-950/5 border border-white/80 p-5 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
                 <h3 className="text-base font-extrabold text-slate-800">
                   Cẩm Nang Đèn Giao Thông Thực Phẩm Cho Người Gan Nhiễm Mỡ
@@ -2193,6 +2216,8 @@ export default function App() {
               </div>
             </div>
           </section>
+        )}
+          </div>
         )}
       </main>
     </div>
